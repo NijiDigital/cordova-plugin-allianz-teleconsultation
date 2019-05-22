@@ -19,15 +19,14 @@
 -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-           id="cordova-plugin-inappbrowser"
-      version="3.1.0-dev">
+           id="cordova-plugin-allianz-teleconsultation"
+      version="0.1.0">
 
-    <name>InAppBrowser</name>
-    <description>Cordova InAppBrowser Plugin</description>
-    <license>Apache 2.0</license>
-    <keywords>cordova,in,app,browser,inappbrowser</keywords>
-    <repo>https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git</repo>
-    <issue>https://issues.apache.org/jira/browse/CB/component/12320641</issue>
+    <name>Allianz Teleconsultation</name>
+    <description>Cordova Plugin for Allianz Teleconsultation</description>
+    <license>TBD</license>
+    <keywords>cordova,allianz,teleconsultation</keywords>
+    <repo>https://github.com/NijiDigital/cordova-plugin-allianz-teleconsultation.git</repo>
 
     <engines>
       <engine name="cordova" version=">=3.1.0" /><!-- Needs cordova/urlutil -->
@@ -35,13 +34,13 @@
 
     <!-- android -->
     <platform name="android">
-        <js-module src="www/inappbrowser.js" name="inappbrowser">
-            <clobbers target="cordova.InAppBrowser.open" />
+        <js-module src="www/inappbrowser.js" name="allianzteleconsultation">
+            <clobbers target="cordova.AllianzTeleconsultation.open" />
             <clobbers target="window.open" />
         </js-module>
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="InAppBrowser">
-                <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>
+                <param name="android-package" value="fr.niji.cordova.allianzteleconsultation.InAppBrowser"/>
             </feature>
         </config-file>
 
@@ -69,8 +68,8 @@
 
     <!-- ios -->
     <platform name="ios">
-        <js-module src="www/inappbrowser.js" name="inappbrowser">
-            <clobbers target="cordova.InAppBrowser.open" />
+        <js-module src="www/inappbrowser.js" name="allianzteleconsultation">
+            <clobbers target="cordova.AllianzTeleconsultation.open" />
             <clobbers target="window.open" />
         </js-module>
         <config-file target="config.xml" parent="/*">
@@ -103,44 +102,5 @@
 
 
 	    <framework src="CoreGraphics.framework" />
-    </platform>
-
-    <!-- osx -->
-    <platform name="osx">
-        <js-module src="www/inappbrowser.js" name="inappbrowser">
-            <clobbers target="cordova.InAppBrowser.open" />
-            <clobbers target="window.open" />
-        </js-module>
-        <config-file target="config.xml" parent="/*">
-            <feature name="InAppBrowser">
-                <param name="osx-package" value="CDVInAppBrowser" />
-            </feature>
-        </config-file>
-
-        <header-file src="src/osx/CDVInAppBrowser.h" />
-        <source-file src="src/osx/CDVInAppBrowser.m" />
-    </platform>
-
-    <!-- windows universal apps (Windows 8.1, Windows Phone 8.1, Windows 8.0) -->
-    <platform name="windows">
-        <js-module src="www/inappbrowser.js" name="inappbrowser">
-            <clobbers target="cordova.InAppBrowser.open" />
-            <clobbers target="window.open" />
-        </js-module>
-        <js-module src="src/windows/InAppBrowserProxy.js" name="InAppBrowserProxy">
-            <runs />
-        </js-module>
-        <asset src="www/inappbrowser.css" target="css/inappbrowser.css" />
-    </platform>
-
-    <!-- browser -->
-    <platform name="browser">
-        <js-module src="www/inappbrowser.js" name="inappbrowser">
-            <clobbers target="cordova.InAppBrowser.open" />
-            <clobbers target="window.open" />
-        </js-module>
-        <js-module src="src/browser/InAppBrowserProxy.js" name="InAppBrowserProxy">
-            <runs />
-        </js-module>
     </platform>
 </plugin>
