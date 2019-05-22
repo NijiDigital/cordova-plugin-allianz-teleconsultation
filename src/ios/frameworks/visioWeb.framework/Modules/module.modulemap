@@ -1,0 +1,6 @@
+framework module visioWeb {
+  umbrella header "visioWeb.h"
+
+  export *
+  module * { export * }
+}

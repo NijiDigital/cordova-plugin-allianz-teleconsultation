@@ -20,18 +20,12 @@
 */
 
 (function () {
-    // special patch to correctly work on Ripple emulator (CB-9760)
-    if (window.parent && !!window.parent.ripple) { // https://gist.github.com/triceam/4658021
-        module.exports = window.open.bind(window); // fallback to default window.open behaviour
-        return;
-    }
-
     var exec = require('cordova/exec');
     var channel = require('cordova/channel');
     var modulemapper = require('cordova/modulemapper');
     var urlutil = require('cordova/urlutil');
 
-    function InAppBrowser () {
+    function AllianzInAppBrowser () {
         this.channels = {
             'beforeload': channel.create('beforeload'),
             'loadstart': channel.create('loadstart'),
@@ -43,7 +37,7 @@
         };
     }
 
-    InAppBrowser.prototype = {
+    AllianzInAppBrowser.prototype = {
         _eventHandler: function (event) {
             if (event && (event.type in this.channels)) {
                 if (event.type === 'beforeload') {
@@ -55,16 +49,16 @@
         },
         _loadAfterBeforeload: function (strUrl) {
             strUrl = urlutil.makeAbsolute(strUrl);
-            exec(null, null, 'InAppBrowser', 'loadAfterBeforeload', [strUrl]);
+            exec(null, null, 'AllianzInAppBrowser', 'loadAfterBeforeload', [strUrl]);
         },
         close: function (eventname) {
-            exec(null, null, 'InAppBrowser', 'close', []);
+            exec(null, null, 'AllianzInAppBrowser', 'close', []);
         },
         show: function (eventname) {
-            exec(null, null, 'InAppBrowser', 'show', []);
+            exec(null, null, 'AllianzInAppBrowser', 'show', []);
         },
         hide: function (eventname) {
-            exec(null, null, 'InAppBrowser', 'hide', []);
+            exec(null, null, 'AllianzInAppBrowser', 'hide', []);
         },
         addEventListener: function (eventname, f) {
             if (eventname in this.channels) {
@@ -79,9 +73,9 @@
 
         executeScript: function (injectDetails, cb) {
             if (injectDetails.code) {
-                exec(cb, null, 'InAppBrowser', 'injectScriptCode', [injectDetails.code, !!cb]);
+                exec(cb, null, 'AllianzInAppBrowser', 'injectScriptCode', [injectDetails.code, !!cb]);
             } else if (injectDetails.file) {
-                exec(cb, null, 'InAppBrowser', 'injectScriptFile', [injectDetails.file, !!cb]);
+                exec(cb, null, 'AllianzInAppBrowser', 'injectScriptFile', [injectDetails.file, !!cb]);
             } else {
                 throw new Error('executeScript requires exactly one of code or file to be specified');
             }
@@ -89,9 +83,9 @@
 
         insertCSS: function (injectDetails, cb) {
             if (injectDetails.code) {
-                exec(cb, null, 'InAppBrowser', 'injectStyleCode', [injectDetails.code, !!cb]);
+                exec(cb, null, 'AllianzInAppBrowser', 'injectStyleCode', [injectDetails.code, !!cb]);
             } else if (injectDetails.file) {
-                exec(cb, null, 'InAppBrowser', 'injectStyleFile', [injectDetails.file, !!cb]);
+                exec(cb, null, 'AllianzInAppBrowser', 'injectStyleFile', [injectDetails.file, !!cb]);
             } else {
                 throw new Error('insertCSS requires exactly one of code or file to be specified');
             }
@@ -106,7 +100,7 @@
         }
 
         strUrl = urlutil.makeAbsolute(strUrl);
-        var iab = new InAppBrowser();
+        var iab = new AllianzInAppBrowser();
 
         callbacks = callbacks || {};
         for (var callbackName in callbacks) {
@@ -119,7 +113,7 @@
 
         strWindowFeatures = strWindowFeatures || '';
 
-        exec(cb, cb, 'InAppBrowser', 'open', [strUrl, strWindowName, strWindowFeatures]);
+        exec(cb, cb, 'AllianzInAppBrowser', 'open', [strUrl, strWindowName, strWindowFeatures]);
         return iab;
     };
 })();

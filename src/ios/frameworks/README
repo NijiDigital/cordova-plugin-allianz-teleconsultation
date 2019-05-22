@@ -1,0 +1,28 @@
+README
+
+1/ Installation du framework
+
+- Drag and drop le framework visioWeb.framework dans le projet
+- Ajouter le framework à la partie "Embedded Binaries" de l'onglet Général du projet
+- Ajouter dans le fichier .plist les clés :
+
+	- NSCameraUsageDescription
+	- NSMicrophoneUsageDescription
+
+Ainsi qu'autoriser l'accès à localhost :
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsLocalNetworking</key>
+    <true/>
+</dict>
+
+2/ Utilisation du framework
+
+Le framework contient une classe "VWVisioViewController".
+Pour l'utiliser il suffit d'en hériter grâce à l'import :
+
+#import <visioWeb/visioWeb.h>
+
+Si votre écran qui hérite de VWVisioViewController possède déjà une webview, elle sera utilisée,
+sinon une webview fullscreen sera créée dans le callback "viewDidLoad"
+Plus de détail sur l'utilisation de la classe sont disponibles dans le header "VWVisioViewController.h"

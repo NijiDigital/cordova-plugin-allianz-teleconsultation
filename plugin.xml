@@ -36,17 +36,16 @@
     <platform name="android">
         <js-module src="www/inappbrowser.js" name="allianzteleconsultation">
             <clobbers target="cordova.AllianzTeleconsultation.open" />
-            <clobbers target="window.open" />
         </js-module>
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="InAppBrowser">
+            <feature name="AllianzInAppBrowser">
                 <param name="android-package" value="fr.niji.cordova.allianzteleconsultation.InAppBrowser"/>
             </feature>
         </config-file>
 
-        <source-file src="src/android/InAppBrowser.java" target-dir="src/org/apache/cordova/inappbrowser" />
-        <source-file src="src/android/InAppBrowserDialog.java" target-dir="src/org/apache/cordova/inappbrowser" />
-        <source-file src="src/android/InAppChromeClient.java" target-dir="src/org/apache/cordova/inappbrowser" />
+        <source-file src="src/android/InAppBrowser.java" target-dir="src/fr/niji/cordova/allianzteleconsultation" />
+        <source-file src="src/android/InAppBrowserDialog.java" target-dir="src/fr/niji/cordova/allianzteleconsultation" />
+        <source-file src="src/android/InAppChromeClient.java" target-dir="src/fr/niji/cordova/allianzteleconsultation" />
 
         <!--  drawable src/android/resources -->
         <resource-file src="src/android/res/drawable-hdpi/ic_action_next_item.png" target="res/drawable-hdpi/ic_action_next_item.png" />
@@ -70,37 +69,48 @@
     <platform name="ios">
         <js-module src="www/inappbrowser.js" name="allianzteleconsultation">
             <clobbers target="cordova.AllianzTeleconsultation.open" />
-            <clobbers target="window.open" />
         </js-module>
         <config-file target="config.xml" parent="/*">
-            <feature name="InAppBrowser">
-                <param name="ios-package" value="CDVInAppBrowser" />
+            <feature name="AllianzInAppBrowser">
+                <param name="ios-package" value="CDVAllianzInAppBrowser" />
                 <param name="onload" value="true" />
             </feature>
-            <feature name="UIInAppBrowser">
-                <param name="ios-package" value="CDVUIInAppBrowser" />
+            <feature name="UIAllianzInAppBrowser">
+                <param name="ios-package" value="CDVAllianzUIInAppBrowser" />
                 <param name="onload" value="true" />
             </feature>
-            <feature name="WKInAppBrowser">
-                <param name="ios-package" value="CDVWKInAppBrowser" />
+            <feature name="WKAllianzInAppBrowser">
+                <param name="ios-package" value="CDVAllianzWKInAppBrowser" />
                 <param name="onload" value="true" />
             </feature>
         </config-file>
-
-        <header-file src="src/ios/CDVInAppBrowser.h" />
-	    <source-file src="src/ios/CDVInAppBrowser.m" />
-        <header-file src="src/ios/CDVInAppBrowserOptions.h" />
-        <source-file src="src/ios/CDVInAppBrowserOptions.m" />
-        <header-file src="src/ios/CDVInAppBrowserNavigationController.h" />
-        <source-file src="src/ios/CDVInAppBrowserNavigationController.m" />
-	    <header-file src="src/ios/CDVUIInAppBrowser.h" />
-	    <source-file src="src/ios/CDVUIInAppBrowser.m" />
-	    <header-file src="src/ios/CDVWKInAppBrowser.h" />
-	    <source-file src="src/ios/CDVWKInAppBrowser.m" />
-	    <header-file src="src/ios/CDVWKInAppBrowserUIDelegate.h" />
-	    <source-file src="src/ios/CDVWKInAppBrowserUIDelegate.m" />
+        <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+            <string>The camera access is used to be able to teleconference with a doctor.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+            <string>The microphone access is used to be able to speak with a doctor.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSAppTransportSecurity">
+            <dict>
+                <key>NSAllowsLocalNetworking</key>
+                <true/>
+            </dict>
+        </config-file>
+        <header-file src="src/ios/CDVAllianzInAppBrowser.h" />
+	    <source-file src="src/ios/CDVAllianzInAppBrowser.m" />
+        <header-file src="src/ios/CDVAllianzInAppBrowserOptions.h" />
+        <source-file src="src/ios/CDVAllianzInAppBrowserOptions.m" />
+        <header-file src="src/ios/CDVAllianzInAppBrowserNavigationController.h" />
+        <source-file src="src/ios/CDVAllianzInAppBrowserNavigationController.m" />
+	    <header-file src="src/ios/CDVAllianzUIInAppBrowser.h" />
+	    <source-file src="src/ios/CDVAllianzUIInAppBrowser.m" />
+	    <header-file src="src/ios/CDVAllianzWKInAppBrowser.h" />
+	    <source-file src="src/ios/CDVAllianzWKInAppBrowser.m" />
+	    <header-file src="src/ios/CDVAllianzWKInAppBrowserUIDelegate.h" />
+	    <source-file src="src/ios/CDVAllianzWKInAppBrowserUIDelegate.m" />
 
 
 	    <framework src="CoreGraphics.framework" />
+        <framework src="src/ios/frameworks/visioWeb.framework" embed="true" custom="true" />
     </platform>
 </plugin>
