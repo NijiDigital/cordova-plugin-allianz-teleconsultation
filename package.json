@@ -1,37 +1,26 @@
 {
-  "name": "cordova-plugin-inappbrowser",
-  "version": "3.1.0-dev",
-  "description": "Cordova InAppBrowser Plugin",
+  "name": "cordova-plugin-allianz-teleconsultation",
+  "version": "0.1.0",
+  "description": "Cordova Plugin for Allianz Teleconsultation",
   "types": "./types/index.d.ts",
   "cordova": {
-    "id": "cordova-plugin-inappbrowser",
+    "id": "cordova-plugin-allianz-teleconsultation",
     "platforms": [
       "android",
-      "browser",
       "ios",
-      "osx",
-      "windows"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/apache/cordova-plugin-inappbrowser"
-  },
-  "bugs": {
-    "url": "https://issues.apache.org/jira/browse/CB"
+    "url": "https://github.com/NijiDigital/cordova-plugin-allianz-teleconsultation.git"
   },
   "keywords": [
     "cordova",
-    "in",
-    "app",
-    "browser",
-    "inappbrowser",
+    "allianz",
+    "teleconsultation",
     "ecosystem:cordova",
     "cordova-android",
-    "cordova-browser",
-    "cordova-ios",
-    "cordova-osx",
-    "cordova-windows"
+    "cordova-ios"
   ],
   "scripts": {
     "test": "npm run eslint",
@@ -47,8 +36,8 @@
       }
     }
   },
-  "author": "Apache Software Foundation",
-  "license": "Apache-2.0",
+  "author": "Niji",
+  "license": "TBD",
   "devDependencies": {
     "eslint": "^4.0.0",
     "eslint-config-semistandard": "^11.0.0",
