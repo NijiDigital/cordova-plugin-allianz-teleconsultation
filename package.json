@@ -7,7 +7,7 @@
     "id": "cordova-plugin-allianz-teleconsultation",
     "platforms": [
       "android",
-      "ios",
+      "ios"
     ]
   },
   "repository": {
