@@ -722,6 +722,7 @@ BOOL allianzIsExiting = FALSE;
         self.webViewUIDelegate = [[CDVAllianzWKInAppBrowserUIDelegate alloc] initWithTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]];
         [self.webViewUIDelegate setViewController:self];
         
+        [self setupVideo];
         [self createViews];
     }
     
@@ -730,6 +731,22 @@ BOOL allianzIsExiting = FALSE;
 
 -(void)dealloc {
     //NSLog(@"dealloc");
+}
+
+- (void)setupVideo {
+    if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] != AVAuthorizationStatusAuthorized) {
+        [self authorizeCamera];
+    }
+}
+
+- (void)authorizeCamera {
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+        if (granted) {
+            
+        } else {
+            NSLog(@"video not granted");
+        }
+    }];
 }
 
 - (void)createViews
@@ -762,9 +779,12 @@ BOOL allianzIsExiting = FALSE;
         configuration.mediaPlaybackRequiresUserAction = _browserOptions.mediaplaybackrequiresuseraction;
     }
     
-    self.webView = [[WKWebView alloc] initWithFrame:webViewBounds configuration:configuration];
-    
-    [self.view addSubview:self.webView];    
+    [self.webView.configuration setWebsiteDataStore:configuration.websiteDataStore];
+    [self.webView.configuration setProcessPool:configuration.processPool];
+    [self.webView.configuration setUserContentController:configuration.userContentController];
+    [self.webView.configuration setAllowsInlineMediaPlayback:configuration.allowsInlineMediaPlayback];
+    [self.webView.configuration setIgnoresViewportScaleLimits:configuration.ignoresViewportScaleLimits];
+    [self.webView setFrame:webViewBounds];
     
     self.webView.navigationDelegate = self;
     self.webView.UIDelegate = self.webViewUIDelegate;

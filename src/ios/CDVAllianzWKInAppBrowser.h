@@ -24,6 +24,7 @@
 #import "CDVAllianzInAppBrowserOptions.h"
 #import "CDVAllianzInAppBrowserNavigationController.h"
 #import <visioWeb/visioWeb.h>
+#import <AVFoundation/AVCaptureDevice.h>
 
 @class CDVAllianzWKInAppBrowserViewController;
 

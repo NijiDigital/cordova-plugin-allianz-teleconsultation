@@ -18,6 +18,7 @@
 */
 package fr.niji.cordova.allianzteleconsultation;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
@@ -36,7 +37,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -71,6 +75,7 @@ import org.apache.cordova.CordovaHttpAuthHandler;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.LOG;
+import org.apache.cordova.PermissionHelper;
 import org.apache.cordova.PluginManager;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
@@ -118,6 +123,9 @@ public class InAppBrowser extends CordovaPlugin {
     private static final String FOOTER_COLOR = "footercolor";
     private static final String BEFORELOAD = "beforeload";
 
+    private static final int PERMISSION_AUDIO_RECORD = 200;
+    private static final int PERMISSION_CAMERA_RECORD = 201;
+
     private static final List customizableOptions = Arrays.asList(CLOSE_BUTTON_CAPTION, TOOLBAR_COLOR, NAVIGATION_COLOR, CLOSE_BUTTON_COLOR, FOOTER_COLOR);
 
     private InAppBrowserDialog dialog;
@@ -149,6 +157,8 @@ public class InAppBrowser extends CordovaPlugin {
     private String beforeload = "";
     private String[] allowedSchemes;
 
+    private CordovaArgs requestArgs;
+
     /**
      * Executes the request and returns PluginResult.
      *
@@ -158,99 +168,11 @@ public class InAppBrowser extends CordovaPlugin {
      * @return A PluginResult object with a status and message.
      */
     public boolean execute(String action, CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
+        this.callbackContext = callbackContext;
+        this.requestArgs = args;
+
         if (action.equals("open")) {
-            this.callbackContext = callbackContext;
-            final String url = args.getString(0);
-            String t = args.optString(1);
-            if (t == null || t.equals("") || t.equals(NULL)) {
-                t = SELF;
-            }
-            final String target = t;
-            final HashMap<String, String> features = parseFeature(args.optString(2));
-
-            LOG.d(LOG_TAG, "target = " + target);
-
-            this.cordova.getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String result = "";
-                    // SELF
-                    if (SELF.equals(target)) {
-                        LOG.d(LOG_TAG, "in self");
-                        /* This code exists for compatibility between 3.x and 4.x versions of Cordova.
-                         * Previously the Config class had a static method, isUrlWhitelisted(). That
-                         * responsibility has been moved to the plugins, with an aggregating method in
-                         * PluginManager.
-                         */
-                        Boolean shouldAllowNavigation = null;
-                        if (url.startsWith("javascript:")) {
-                            shouldAllowNavigation = true;
-                        }
-                        if (shouldAllowNavigation == null) {
-                            try {
-                                Method iuw = Config.class.getMethod("isUrlWhiteListed", String.class);
-                                shouldAllowNavigation = (Boolean)iuw.invoke(null, url);
-                            } catch (NoSuchMethodException e) {
-                                LOG.d(LOG_TAG, e.getLocalizedMessage());
-                            } catch (IllegalAccessException e) {
-                                LOG.d(LOG_TAG, e.getLocalizedMessage());
-                            } catch (InvocationTargetException e) {
-                                LOG.d(LOG_TAG, e.getLocalizedMessage());
-                            }
-                        }
-                        if (shouldAllowNavigation == null) {
-                            try {
-                                Method gpm = webView.getClass().getMethod("getPluginManager");
-                                PluginManager pm = (PluginManager)gpm.invoke(webView);
-                                Method san = pm.getClass().getMethod("shouldAllowNavigation", String.class);
-                                shouldAllowNavigation = (Boolean)san.invoke(pm, url);
-                            } catch (NoSuchMethodException e) {
-                                LOG.d(LOG_TAG, e.getLocalizedMessage());
-                            } catch (IllegalAccessException e) {
-                                LOG.d(LOG_TAG, e.getLocalizedMessage());
-                            } catch (InvocationTargetException e) {
-                                LOG.d(LOG_TAG, e.getLocalizedMessage());
-                            }
-                        }
-                        // load in webview
-                        if (Boolean.TRUE.equals(shouldAllowNavigation)) {
-                            LOG.d(LOG_TAG, "loading in webview");
-                            webView.loadUrl(url);
-                        }
-                        //Load the dialer
-                        else if (url.startsWith(WebView.SCHEME_TEL))
-                        {
-                            try {
-                                LOG.d(LOG_TAG, "loading in dialer");
-                                Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse(url));
-                                cordova.getActivity().startActivity(intent);
-                            } catch (android.content.ActivityNotFoundException e) {
-                                LOG.e(LOG_TAG, "Error dialing " + url + ": " + e.toString());
-                            }
-                        }
-                        // load in InAppBrowser
-                        else {
-                            LOG.d(LOG_TAG, "loading in InAppBrowser");
-                            result = showWebPage(url, features);
-                        }
-                    }
-                    // SYSTEM
-                    else if (SYSTEM.equals(target)) {
-                        LOG.d(LOG_TAG, "in system");
-                        result = openExternal(url);
-                    }
-                    // BLANK - or anything else
-                    else {
-                        LOG.d(LOG_TAG, "in blank");
-                        result = showWebPage(url, features);
-                    }
-
-                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
-                    pluginResult.setKeepCallback(true);
-                    callbackContext.sendPluginResult(pluginResult);
-                }
-            });
+            this.startWebview(args);
         }
         else if (action.equals("close")) {
             closeDialog();
@@ -330,6 +252,147 @@ public class InAppBrowser extends CordovaPlugin {
         }
         return true;
     }
+
+    private void startWebview(CordovaArgs args) throws JSONException {
+        if (!teleconsultationPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
+            requestPermission(PERMISSION_AUDIO_RECORD, Manifest.permission.RECORD_AUDIO);
+            return;
+        }
+
+        if (!teleconsultationPermissionGranted(Manifest.permission.CAMERA)) {
+            requestPermission(PERMISSION_CAMERA_RECORD, Manifest.permission.CAMERA);
+            return;
+        }
+
+        final String url = args.getString(0);
+        final HashMap<String, String> features = parseFeature(args.optString(2));
+
+        String t = args.optString(1);
+        if (t == null || t.equals("") || t.equals(NULL)) {
+            t = SELF;
+        }
+        final String target = t;
+        LOG.d(LOG_TAG, "target = " + target);
+
+        this.cordova.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String result = "";
+                // SELF
+                if (SELF.equals(target)) {
+                    LOG.d(LOG_TAG, "in self");
+                    /* This code exists for compatibility between 3.x and 4.x versions of Cordova.
+                     * Previously the Config class had a static method, isUrlWhitelisted(). That
+                     * responsibility has been moved to the plugins, with an aggregating method in
+                     * PluginManager.
+                     */
+
+                    Boolean shouldAllowNavigation = null;
+                    if (url.startsWith("javascript:")) {
+                        shouldAllowNavigation = true;
+                    }
+                    if (shouldAllowNavigation == null) {
+                        try {
+                            Method iuw = Config.class.getMethod("isUrlWhiteListed", String.class);
+                            shouldAllowNavigation = (Boolean)iuw.invoke(null, url);
+                        } catch (NoSuchMethodException e) {
+                            LOG.d(LOG_TAG, e.getLocalizedMessage());
+                        } catch (IllegalAccessException e) {
+                            LOG.d(LOG_TAG, e.getLocalizedMessage());
+                        } catch (InvocationTargetException e) {
+                            LOG.d(LOG_TAG, e.getLocalizedMessage());
+                        }
+                    }
+                    if (shouldAllowNavigation == null) {
+                        try {
+                            Method gpm = webView.getClass().getMethod("getPluginManager");
+                            PluginManager pm = (PluginManager)gpm.invoke(webView);
+                            Method san = pm.getClass().getMethod("shouldAllowNavigation", String.class);
+                            shouldAllowNavigation = (Boolean)san.invoke(pm, url);
+                        } catch (NoSuchMethodException e) {
+                            LOG.d(LOG_TAG, e.getLocalizedMessage());
+                        } catch (IllegalAccessException e) {
+                            LOG.d(LOG_TAG, e.getLocalizedMessage());
+                        } catch (InvocationTargetException e) {
+                            LOG.d(LOG_TAG, e.getLocalizedMessage());
+                        }
+                    }
+                    // load in webview
+                    if (Boolean.TRUE.equals(shouldAllowNavigation)) {
+                        LOG.d(LOG_TAG, "loading in webview");
+                        webView.loadUrl(url);
+                    }
+                    //Load the dialer
+                    else if (url.startsWith(WebView.SCHEME_TEL))
+                    {
+                        try {
+                            LOG.d(LOG_TAG, "loading in dialer");
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse(url));
+                            cordova.getActivity().startActivity(intent);
+                        } catch (android.content.ActivityNotFoundException e) {
+                            LOG.e(LOG_TAG, "Error dialing " + url + ": " + e.toString());
+                        }
+                    }
+                    // load in InAppBrowser
+                    else {
+                        LOG.d(LOG_TAG, "loading in InAppBrowser");
+                        result = showWebPage(url, features);
+                    }
+                }
+                // SYSTEM
+                else if (SYSTEM.equals(target)) {
+                    LOG.d(LOG_TAG, "in system");
+                    result = openExternal(url);
+                }
+                // BLANK - or anything else
+                else {
+                    LOG.d(LOG_TAG, "in blank");
+                    result = showWebPage(url, features);
+                }
+
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
+        });
+    }
+
+    private boolean teleconsultationPermissionGranted(String... types) {
+        if (Build.VERSION.SDK_INT < 23) {
+            return true;
+        }
+        for (final String type : types) {
+            if (!PermissionHelper.hasPermission(this, type)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void requestPermission(int requestCode, String... types) {
+        if (!teleconsultationPermissionGranted(types)) {
+            PermissionHelper.requestPermissions(this, requestCode, types);
+        }
+    }
+
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
+        for (int r : grantResults) {
+            if (r == PackageManager.PERMISSION_DENIED) {
+                Log.d(LOG_TAG, "Permission Denied!");
+                this.callbackContext.error("Please allow access to the Camera and Microphone and try again.");
+                return;
+            }
+        }
+
+        // now call the originally requested actions
+        if (requestCode == PERMISSION_AUDIO_RECORD && teleconsultationPermissionGranted(Manifest.permission.CAMERA)) {
+            this.startWebview(requestArgs);
+        } else if (requestCode == PERMISSION_CAMERA_RECORD && teleconsultationPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
+            this.startWebview(requestArgs);
+        }
+    }
+
 
     /**
      * Called when the view navigates.
