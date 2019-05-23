@@ -390,6 +390,10 @@ public class InAppBrowser extends CordovaPlugin {
             this.startWebview(requestArgs);
         } else if (requestCode == PERMISSION_CAMERA_RECORD && teleconsultationPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
             this.startWebview(requestArgs);
+        } else if (!teleconsultationPermissionGranted(Manifest.permission.CAMERA)) {
+            this.requestPermission(PERMISSION_CAMERA_RECORD, Manifest.permission.CAMERA);
+        } else if (!teleconsultationPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
+            this.requestPermission(PERMISSION_AUDIO_RECORD, Manifest.permission.RECORD_AUDIO);
         }
     }
 
