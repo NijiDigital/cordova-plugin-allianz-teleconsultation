@@ -756,10 +756,8 @@ BOOL allianzIsExiting = FALSE;
     CGRect webViewBounds = self.view.bounds;
     BOOL toolbarIsAtBottom = ![_browserOptions.toolbarposition isEqualToString:kInAppBrowserToolbarBarPositionTop];
     webViewBounds.size.height -= _browserOptions.location ? FOOTER_HEIGHT : TOOLBAR_HEIGHT;
-    WKUserContentController* userContentController = [[WKUserContentController alloc] init];
     
     WKWebViewConfiguration* configuration = [[WKWebViewConfiguration alloc] init];
-    configuration.userContentController = userContentController;
 #if __has_include("CDVWKProcessPoolFactory.h")
     configuration.processPool = [[CDVWKProcessPoolFactory sharedFactory] sharedProcessPool];
 #endif
@@ -781,7 +779,6 @@ BOOL allianzIsExiting = FALSE;
     
     [self.webView.configuration setWebsiteDataStore:configuration.websiteDataStore];
     [self.webView.configuration setProcessPool:configuration.processPool];
-    [self.webView.configuration setUserContentController:configuration.userContentController];
     [self.webView.configuration setAllowsInlineMediaPlayback:configuration.allowsInlineMediaPlayback];
     [self.webView.configuration setIgnoresViewportScaleLimits:configuration.ignoresViewportScaleLimits];
     [self.webView setFrame:webViewBounds];
