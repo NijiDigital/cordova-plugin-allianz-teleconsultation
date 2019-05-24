@@ -37,6 +37,13 @@
         <js-module src="www/inappbrowser.js" name="allianzteleconsultation">
             <clobbers target="cordova.AllianzTeleconsultation.open" />
         </js-module>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+            <uses-feature android:name="android.hardware.camera.any" />
+            <uses-feature android:name="android.hardware.microphone" />
+        </config-file>
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="AllianzInAppBrowser">
                 <param name="android-package" value="fr.niji.cordova.allianzteleconsultation.InAppBrowser"/>
