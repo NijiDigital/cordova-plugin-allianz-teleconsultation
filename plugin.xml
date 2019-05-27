@@ -74,6 +74,7 @@
 
     <!-- ios -->
     <platform name="ios">
+        <hook src="scripts/ios/hooks/strip_unsupported_arch.js" type="after_platform_add" />
         <js-module src="www/inappbrowser.js" name="allianzteleconsultation">
             <clobbers target="cordova.AllianzTeleconsultation.open" />
         </js-module>
