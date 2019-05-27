@@ -1,31 +1,9 @@
 ---
-title: Inappbrowser
-description: Open an in-app browser window.
+title: allianz-teleconsultation
+description: Plugin that allows the use of Allianz teleconsultation service.
 ---
-<!--
-# license: Licensed to the Apache Software Foundation (ASF) under one
-#         or more contributor license agreements.  See the NOTICE file
-#         distributed with this work for additional information
-#         regarding copyright ownership.  The ASF licenses this file
-#         to you under the Apache License, Version 2.0 (the
-#         "License"); you may not use this file except in compliance
-#         with the License.  You may obtain a copy of the License at
-#
-#           http://www.apache.org/licenses/LICENSE-2.0
-#
-#         Unless required by applicable law or agreed to in writing,
-#         software distributed under the License is distributed on an
-#         "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-#         KIND, either express or implied.  See the License for the
-#         specific language governing permissions and limitations
-#         under the License.
--->
 
-|AppVeyor|Travis CI|
-|:-:|:-:|
-|[![Build status](https://ci.appveyor.com/api/projects/status/github/apache/cordova-plugin-inappbrowser?branch=master)](https://ci.appveyor.com/project/ApacheSoftwareFoundation/cordova-plugin-inappbrowser)|[![Build Status](https://travis-ci.org/apache/cordova-plugin-inappbrowser.svg?branch=master)](https://travis-ci.org/apache/cordova-plugin-inappbrowser)|
-
-# cordova-plugin-inappbrowser
+# cordova-plugin-allianz-teleconsultation
 
 You can show helpful articles, videos, and web resources inside of your app. Users can view web pages without leaving your app.
 
@@ -33,54 +11,13 @@ You can show helpful articles, videos, and web resources inside of your app. Use
 
 This plugin provides a web browser view that displays when calling `cordova.InAppBrowser.open()`.
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
-
-### `window.open`
-
-The `cordova.InAppBrowser.open()` function is defined to be a drop-in replacement
-for the `window.open()` function.  Existing `window.open()` calls can use the
-InAppBrowser window, by replacing window.open:
-
-    window.open = cordova.InAppBrowser.open;
-
-The InAppBrowser window behaves like a standard web browser,
-and can't access Cordova APIs. For this reason, the InAppBrowser is recommended
-if you need to load third-party (untrusted) content, instead of loading that
-into the main Cordova webview. The InAppBrowser is not subject to the
-whitelist, nor is opening links in the system browser.
-
-The InAppBrowser provides by default its own GUI controls for the user (back,
-forward, done).
-
-For backwards compatibility, this plugin also hooks `window.open`.
-However, the plugin-installed hook of `window.open` can have unintended side
-effects (especially if this plugin is included only as a dependency of another
-plugin).  The hook of `window.open` will be removed in a future major release.
-Until the hook is removed from the plugin, apps can manually restore the default
-behaviour:
-
-    delete window.open // Reverts the call back to its prototype's default
-
-Although `window.open` is in the global scope, InAppBrowser is not available until after the `deviceready` event.
-
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-        console.log("window.open works well");
-    }
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
 
 ## Installation
 
-    cordova plugin add cordova-plugin-inappbrowser
+    cordova plugin add cordova-plugin-allianz-teleconsultation
 
-If you want all page loads in your app to go through the InAppBrowser, you can
-simply hook `window.open` during initialization.  For example:
-
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-        window.open = cordova.InAppBrowser.open;
-    }
-
-## cordova.InAppBrowser.open
+## cordova.AllianzTeleconsultation.open
 
 Opens a URL in a new `InAppBrowser` instance, the current browser
 instance, or the system browser.
@@ -166,31 +103,16 @@ instance, or the system browser.
 ### Supported Platforms
 
 - Android
-- Browser
 - iOS
-- OSX
-- Windows
 
 ### Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
-    var ref2 = cordova.InAppBrowser.open(encodeURI('http://ja.m.wikipedia.org/wiki/ハングル'), '_blank', 'location=yes');
-
-### OSX Quirks
-
-At the moment the only supported target in OSX is `_system`.
-
-`_blank` and `_self` targets are not yet implemented and are ignored silently. Pull requests and patches to get these to work are greatly appreciated.
-
-### Browser Quirks
-
-- Plugin is implemented via iframe,
-
-- Navigation history (`back` and `forward` buttons in LocationBar) is not implemented.
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
+    var ref2 = cordova.AllianzTeleconsultation.open(encodeURI('http://ja.m.wikipedia.org/wiki/ハングル'), '_blank', 'location=yes');
 
 ## InAppBrowser
 
-The object returned from a call to `cordova.InAppBrowser.open` when the target is set to `'_blank'`.
+The object returned from a call to `cordova.AllianzTeleconsultation.open` when the target is set to `'_blank'`.
 
 ### Methods
 
@@ -225,7 +147,7 @@ The object returned from a call to `cordova.InAppBrowser.open` when the target i
 
 ```javascript
 
-var inAppBrowserRef;
+var AllianzTeleconsultationRef;
 
 function showHelp(url) {
 
@@ -233,17 +155,17 @@ function showHelp(url) {
 
     var options = "location=yes,hidden=yes,beforeload=yes";
 
-    inAppBrowserRef = cordova.InAppBrowser.open(url, target, options);
+    AllianzTeleconsultationRef = cordova.AllianzTeleconsultation.open(url, target, options);
 
-    inAppBrowserRef.addEventListener('loadstart', loadStartCallBack);
+    AllianzTeleconsultationRef.addEventListener('loadstart', loadStartCallBack);
 
-    inAppBrowserRef.addEventListener('loadstop', loadStopCallBack);
+    AllianzTeleconsultationRef.addEventListener('loadstop', loadStopCallBack);
 
-    inAppBrowserRef.addEventListener('loaderror', loadErrorCallBack);
+    AllianzTeleconsultationRef.addEventListener('loaderror', loadErrorCallBack);
 
-    inAppBrowserRef.addEventListener('beforeload', beforeloadCallBack);
+    AllianzTeleconsultationRef.addEventListener('beforeload', beforeloadCallBack);
 
-    inAppBrowserRef.addEventListener('message', messageCallBack);
+    AllianzTeleconsultationRef.addEventListener('message', messageCallBack);
 }
 
 function loadStartCallBack() {
@@ -335,22 +257,11 @@ function messageCallBack(params){
 ### Supported Platforms
 
 - Android
-- Browser
 - iOS
-- Windows
-- OSX
-
-### Browser Quirks
-
-`loadstart`, `loaderror`, `message` events are not fired.
-
-### Windows Quirks
-
-`message` event is not fired.
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
     ref.addEventListener('loadstart', function(event) { alert(event.url); });
 
 ## InAppBrowser.removeEventListener
@@ -375,13 +286,11 @@ The function is passed an `InAppBrowserEvent` object.
 ### Supported Platforms
 
 - Android
-- Browser
 - iOS
-- Windows
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
     var myCallback = function(event) { alert(event.url); }
     ref.addEventListener('loadstart', myCallback);
     ref.removeEventListener('loadstart', myCallback);
@@ -397,13 +306,11 @@ The function is passed an `InAppBrowserEvent` object.
 ### Supported Platforms
 
 - Android
-- Browser
 - iOS
-- Windows
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
     ref.close();
 
 ## InAppBrowser.show
@@ -417,13 +324,11 @@ The function is passed an `InAppBrowserEvent` object.
 ### Supported Platforms
 
 - Android
-- Browser
 - iOS
-- Windows
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'hidden=yes');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'hidden=yes');
     // some time later...
     ref.show();
 
@@ -439,11 +344,10 @@ The function is passed an `InAppBrowserEvent` object.
 
 - Android
 - iOS
-- Windows
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank');
     // some time later...
     ref.hide();
 
@@ -469,24 +373,14 @@ The function is passed an `InAppBrowserEvent` object.
 ### Supported Platforms
 
 - Android
-- Browser
 - iOS
-- Windows
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
     ref.addEventListener('loadstop', function() {
         ref.executeScript({file: "myscript.js"});
     });
-
-### Browser Quirks
-
-- only __code__ key is supported.
-
-### Windows Quirks
-
-Due to [MSDN docs](https://msdn.microsoft.com/en-us/library/windows.ui.xaml.controls.webview.invokescriptasync.aspx) the invoked script can return only string values, otherwise the parameter, passed to __callback__ will be `[null]`.
 
 ## InAppBrowser.insertCSS
 
@@ -506,212 +400,10 @@ Due to [MSDN docs](https://msdn.microsoft.com/en-us/library/windows.ui.xaml.cont
 
 - Android
 - iOS
-- Windows
 
 ### Quick Example
 
-    var ref = cordova.InAppBrowser.open('http://apache.org', '_blank', 'location=yes');
+    var ref = cordova.AllianzTeleconsultation.open('http://apache.org', '_blank', 'location=yes');
     ref.addEventListener('loadstop', function() {
         ref.insertCSS({file: "mystyles.css"});
     });
-__
-
-## <a id="sample"></a>Sample: Show help pages with an InAppBrowser
-
-You can use this plugin to show helpful documentation pages within your app. Users can view online help documents and then close them without leaving the app.
-
-Here's a few snippets that show how you do this.
-
-* [Give users a way to ask for help](#give).
-* [Load a help page](#load).
-* [Let users know that you're getting their page ready](#let).
-* [Show the help page](#show).
-* [Handle page errors](#handle).
-
-### <a id="give"></a>Give users a way to ask for help
-
-There's lots of ways to do this in your app. A drop down list is a simple way to do that.
-
-```html
-
-<select id="help-select">
-    <option value="default">Need help?</option>
-    <option value="article">Show me a helpful article</option>
-    <option value="video">Show me a helpful video</option>
-    <option value="search">Search for other topics</option>
-</select>
-
-```
-
-Gather the users choice in the ``onDeviceReady`` function of the page and then send an appropriate URL to a helper function in some shared library file. Our helper function is named ``showHelp()`` and we'll write that function next.
-
-```javascript
-
-$('#help-select').on('change', function (e) {
-
-    var url;
-
-    switch (this.value) {
-
-        case "article":
-            url = "https://cordova.apache.org/docs/en/latest/"
-                        + "reference/cordova-plugin-inappbrowser/index.html";
-            break;
-
-        case "video":
-            url = "https://youtu.be/F-GlVrTaeH0";
-            break;
-
-        case "search":
-            url = "https://www.google.com/#q=inAppBrowser+plugin";
-            break;
-    }
-
-    showHelp(url);
-
-});
-
-```
-
-### <a id="load"></a>Load a help page
-
-We'll use the ``open`` function to load the help page. We're setting the ``hidden`` property to ``yes`` so that we can show the browser only after the page content has loaded. That way, users don't see a blank browser while they wait for content to appear. When the ``loadstop`` event is raised, we'll know when the content has loaded. We'll handle that event shortly.
-
-```javascript
-
-function showHelp(url) {
-
-    var target = "_blank";
-
-    var options = "location=yes,hidden=yes";
-
-    inAppBrowserRef = cordova.InAppBrowser.open(url, target, options);
-
-    inAppBrowserRef.addEventListener('loadstart', loadStartCallBack);
-
-    inAppBrowserRef.addEventListener('loadstop', loadStopCallBack);
-
-    inAppBrowserRef.addEventListener('loaderror', loadErrorCallBack);
-
-}
-
-```
-
-### <a id="let"></a>Let users know that you're getting their page ready
-
-Because the browser doesn't immediately appear, we can use the ``loadstart`` event to show a status message, progress bar, or other indicator. This assures users that content is on the way.
-
-```javascript
-
-function loadStartCallBack() {
-
-    $('#status-message').text("loading please wait ...");
-
-}
-
-```
-
-### <a id="show"></a>Show the help page
-
-When the ``loadstopcallback`` event is raised, we know that the content has loaded and we can make the browser visible. This sort of trick can create the impression of better performance. The truth is that whether you show the browser before content loads or not, the load times are exactly the same.
-
-```javascript
-
-function loadStopCallBack() {
-
-    if (inAppBrowserRef != undefined) {
-
-        inAppBrowserRef.insertCSS({ code: "body{font-size: 25px;" });
-
-        $('#status-message').text("");
-
-        inAppBrowserRef.show();
-    }
-
-}
-
-```
-You might have noticed the call to the ``insertCSS`` function. This serves no particular purpose in our scenario. But it gives you an idea of why you might use it. In this case, we're just making sure that the font size of your pages have a certain size. You can use this function to insert any CSS style elements. You can even point to a CSS file in your project.
-
-### <a id="handle"></a>Handle page errors
-
-Sometimes a page no longer exists, a script error occurs, or a user lacks permission to view the resource. How or if you handle that situation is completely up to you and your design. You can let the browser show that message or you can present it in another way.
-
-We'll try to show that error in a message box. We can do that by injecting a script that calls the ``alert`` function. That said, this won't work in browsers on Windows devices so we'll have to look at the parameter of the ``executeScript`` callback function to see if our attempt worked. If it didn't work out for us, we'll just show the error message in a ``<div>`` on the page.
-
-```javascript
-
-function loadErrorCallBack(params) {
-
-    $('#status-message').text("");
-
-    var scriptErrorMesssage =
-       "alert('Sorry we cannot open that page. Message from the server is : "
-       + params.message + "');"
-
-    inAppBrowserRef.executeScript({ code: scriptErrorMesssage }, executeScriptCallBack);
-
-    inAppBrowserRef.close();
-
-    inAppBrowserRef = undefined;
-
-}
-
-function executeScriptCallBack(params) {
-
-    if (params[0] == null) {
-
-        $('#status-message').text(
-           "Sorry we couldn't open that page. Message from the server is : '"
-           + params.message + "'");
-    }
-
-}
-
-```
-
-## More Usage Info
-
-### Local Urls ( source is in the app package )
-```
-var iab = cordova.InAppBrowser;
-
-iab.open('local-url.html');                  // loads in the Cordova WebView
-iab.open('local-url.html', '_self');         // loads in the Cordova WebView
-iab.open('local-url.html', '_system');       // Security error: system browser, but url will not load (iOS)
-iab.open('local-url.html', '_blank');        // loads in the InAppBrowser
-iab.open('local-url.html', 'random_string'); // loads in the InAppBrowser
-iab.open('local-url.html', 'random_string', 'location=no'); // loads in the InAppBrowser, no location bar
-
-```
-
-
-
-### Whitelisted Content
-
-```
-var iab = cordova.InAppBrowser;
-
-iab.open('http://whitelisted-url.com');                  // loads in the Cordova WebView
-iab.open('http://whitelisted-url.com', '_self');         // loads in the Cordova WebView
-iab.open('http://whitelisted-url.com', '_system');       // loads in the system browser
-iab.open('http://whitelisted-url.com', '_blank');        // loads in the InAppBrowser
-iab.open('http://whitelisted-url.com', 'random_string'); // loads in the InAppBrowser
-
-iab.open('http://whitelisted-url.com', 'random_string', 'location=no'); // loads in the InAppBrowser, no location bar
-
-```
-
-### Urls that are not white-listed
-
-```
-var iab = cordova.InAppBrowser;
-
-iab.open('http://url-that-fails-whitelist.com');                  // loads in the InAppBrowser
-iab.open('http://url-that-fails-whitelist.com', '_self');         // loads in the InAppBrowser
-iab.open('http://url-that-fails-whitelist.com', '_system');       // loads in the system browser
-iab.open('http://url-that-fails-whitelist.com', '_blank');        // loads in the InAppBrowser
-iab.open('http://url-that-fails-whitelist.com', 'random_string'); // loads in the InAppBrowser
-iab.open('http://url-that-fails-whitelist.com', 'random_string', 'location=no'); // loads in the InAppBrowser, no location bar
-
-```
