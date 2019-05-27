@@ -38,6 +38,9 @@
   },
   "author": "Niji",
   "license": "TBD",
+  "dependencies": {
+    "xcode": "^2.0.0"
+  },
   "devDependencies": {
     "eslint": "^4.0.0",
     "eslint-config-semistandard": "^11.0.0",
