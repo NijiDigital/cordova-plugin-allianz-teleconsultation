@@ -19,6 +19,7 @@
 
 #import "CDVAllianzWKInAppBrowser.h"
 
+@import AVFoundation;
 #if __has_include("CDVWKProcessPoolFactory.h")
 #import "CDVWKProcessPoolFactory.h"
 #endif
@@ -589,7 +590,6 @@ static CDVAllianzWKInAppBrowser* instance = nil;
 
 #pragma mark WKScriptMessageHandler delegate
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
-    
     CDVPluginResult* pluginResult = nil;
     
     if([message.body isKindOfClass:[NSDictionary class]]){
@@ -1250,6 +1250,7 @@ BOOL allianzIsExiting = FALSE;
 
 #pragma mark WKScriptMessageHandler delegate
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
+    [super userContentController:userContentController didReceiveScriptMessage:message];
     if (![message.name isEqualToString:IAB_BRIDGE_NAME]) {
         return;
     }
