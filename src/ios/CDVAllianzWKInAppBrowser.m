@@ -722,7 +722,6 @@ BOOL allianzIsExiting = FALSE;
         self.webViewUIDelegate = [[CDVAllianzWKInAppBrowserUIDelegate alloc] initWithTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]];
         [self.webViewUIDelegate setViewController:self];
         
-        [self setupVideo];
         [self createViews];
     }
     
@@ -731,22 +730,6 @@ BOOL allianzIsExiting = FALSE;
 
 -(void)dealloc {
     //NSLog(@"dealloc");
-}
-
-- (void)setupVideo {
-    if ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] != AVAuthorizationStatusAuthorized) {
-        [self authorizeCamera];
-    }
-}
-
-- (void)authorizeCamera {
-    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-        if (granted) {
-            
-        } else {
-            NSLog(@"video not granted");
-        }
-    }];
 }
 
 - (void)createViews
