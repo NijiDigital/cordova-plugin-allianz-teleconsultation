@@ -363,6 +363,7 @@ static CDVAllianzUIInAppBrowser* instance = nil;
 
 - (void)injectDeferredObject:(NSString*)source withWrapper:(NSString*)jsWrapper
 {
+    [self createIframeBridge];
     if (jsWrapper != nil) {
         NSData* jsonData = [NSJSONSerialization dataWithJSONObject:@[source] options:0 error:nil];
         NSString* sourceArrayString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -462,7 +463,7 @@ static CDVAllianzUIInAppBrowser* instance = nil;
     BOOL useBeforeLoad = NO;
     NSString* httpMethod = request.HTTPMethod;
     NSString* errorMessage = nil;
-    
+
     if([_beforeload isEqualToString:@"post"]){
         //TODO handle POST requests by preserving POST data then remove this condition
         errorMessage = @"beforeload doesn't yet support POST requests";
@@ -524,11 +525,11 @@ static CDVAllianzUIInAppBrowser* instance = nil;
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsDictionary:@{@"type":@"beforeload", @"url":[url absoluteString]}];
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
-        
+
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
         return NO;
     }
-    
+
     if(errorMessage != nil){
         NSLog(errorMessage);
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
@@ -565,7 +566,6 @@ static CDVAllianzUIInAppBrowser* instance = nil;
 
 - (void)webViewDidFinishLoad:(UIWebView*)theWebView
 {
-    [self createIframeBridge];
     if (self.callbackId != nil) {
         // TODO: It would be more useful to return the URL the page is actually on (e.g. if it's been redirected).
         NSString* url = [self.inAppBrowserViewController.currentURL absoluteString];
@@ -1125,5 +1125,3 @@ static CDVAllianzUIInAppBrowser* instance = nil;
 }
 
 @end
-
-

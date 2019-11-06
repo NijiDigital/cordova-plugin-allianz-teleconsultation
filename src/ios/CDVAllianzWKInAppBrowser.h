@@ -29,6 +29,8 @@
 @class CDVAllianzWKInAppBrowserViewController;
 
 @interface CDVAllianzWKInAppBrowser : CDVPlugin {
+    UIWindow * tmpWindow;
+
     @private
     NSString* _beforeload;
     BOOL _waitForBeforeload;
