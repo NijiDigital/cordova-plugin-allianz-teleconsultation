@@ -120,5 +120,6 @@
 
 	    <framework src="CoreGraphics.framework" />
         <framework src="src/ios/frameworks/visioWeb.framework" embed="true" custom="true" />
+        <framework src="src/ios/frameworks/WebRTC.framework" embed="true" custom="true" />
     </platform>
 </plugin>

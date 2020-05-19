@@ -1,20 +1,19 @@
 README
 
+Version : 1.1
+
 1/ Installation du framework
 
-- Drag and drop le framework visioWeb.framework dans le projet
-- Ajouter le framework à la partie "Embedded Binaries" de l'onglet Général du projet
+- Drag and drop les frameworks visioWeb.framework et WebRTC.framework dans le projet
+Xcode 10 et moins :
+- Ajouter les framework à la partie "Embedded Binaries" de l'onglet Général du projet
+Xcode 11 :
+- Sélectionner "Embed & sign"
+
 - Ajouter dans le fichier .plist les clés :
 
 	- NSCameraUsageDescription
 	- NSMicrophoneUsageDescription
-
-Ainsi qu'autoriser l'accès à localhost :
-<key>NSAppTransportSecurity</key>
-<dict>
-    <key>NSAllowsLocalNetworking</key>
-    <true/>
-</dict>
 
 2/ Utilisation du framework
 
