@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-allianz-teleconsultation",
-  "version": "1.0.3",
+  "version": "1.1.2",
   "description": "Cordova Plugin for Allianz Teleconsultation",
   "types": "./types/index.d.ts",
   "cordova": {
