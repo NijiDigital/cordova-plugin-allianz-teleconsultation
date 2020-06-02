@@ -110,8 +110,6 @@
         <source-file src="src/ios/CDVAllianzInAppBrowserOptions.m" />
         <header-file src="src/ios/CDVAllianzInAppBrowserNavigationController.h" />
         <source-file src="src/ios/CDVAllianzInAppBrowserNavigationController.m" />
-	    <header-file src="src/ios/CDVAllianzUIInAppBrowser.h" />
-	    <source-file src="src/ios/CDVAllianzUIInAppBrowser.m" />
 	    <header-file src="src/ios/CDVAllianzWKInAppBrowser.h" />
 	    <source-file src="src/ios/CDVAllianzWKInAppBrowser.m" />
 	    <header-file src="src/ios/CDVAllianzWKInAppBrowserUIDelegate.h" />

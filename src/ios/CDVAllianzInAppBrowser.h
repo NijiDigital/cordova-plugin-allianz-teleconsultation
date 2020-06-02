@@ -22,9 +22,6 @@
 
 @interface CDVAllianzInAppBrowser : CDVPlugin {}
 
-@property (nonatomic, assign) BOOL wkwebviewavailable;
-@property (nonatomic, assign) BOOL usewkwebview;
-
 - (void)open:(CDVInvokedUrlCommand*)command;
 - (void)close:(CDVInvokedUrlCommand*)command;
 - (void)injectScriptCode:(CDVInvokedUrlCommand*)command;
