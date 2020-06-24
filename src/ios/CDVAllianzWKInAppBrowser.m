@@ -25,7 +25,6 @@
 #endif
 
 #import <Cordova/CDVPluginResult.h>
-#import <Cordova/CDVUserAgentUtil.h>
 
 #define    kInAppBrowserTargetSelf @"_self"
 #define    kInAppBrowserTargetSystem @"_system"
@@ -210,16 +209,7 @@ static CDVAllianzWKInAppBrowser* instance = nil;
     }
 
     if (self.inAppBrowserViewController == nil) {
-        NSString* userAgent = [CDVUserAgentUtil originalUserAgent];
-        NSString* overrideUserAgent = [self settingForKey:@"OverrideUserAgent"];
-        NSString* appendUserAgent = [self settingForKey:@"AppendUserAgent"];
-        if(overrideUserAgent){
-            userAgent = overrideUserAgent;
-        }
-        if(appendUserAgent){
-            userAgent = [userAgent stringByAppendingString: appendUserAgent];
-        }
-        self.inAppBrowserViewController = [[CDVAllianzWKInAppBrowserViewController alloc] initWithUserAgent:userAgent prevUserAgent:[self.commandDelegate userAgent] browserOptions: browserOptions];
+        self.inAppBrowserViewController = [[CDVAllianzWKInAppBrowserViewController alloc] init:browserOptions: browserOptions];
         self.inAppBrowserViewController.navigationDelegate = self;
 
         if ([self.viewController conformsToProtocol:@protocol(CDVScreenOrientationDelegate)]) {
@@ -726,12 +716,10 @@ static CDVAllianzWKInAppBrowser* instance = nil;
 BOOL allianzViewRenderedAtLeastOnce = FALSE;
 BOOL allianzIsExiting = FALSE;
 
-- (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent browserOptions: (CDVAllianzInAppBrowserOptions*) browserOptions
+- (id)init:browserOptions: (CDVAllianzInAppBrowserOptions*) browserOptions
 {
     self = [super init];
     if (self != nil) {
-        _userAgent = userAgent;
-        _prevUserAgent = prevUserAgent;
         _browserOptions = browserOptions;
         self.webViewUIDelegate = [[CDVAllianzWKInAppBrowserUIDelegate alloc] initWithTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]];
         [self.webViewUIDelegate setViewController:self];
@@ -1072,7 +1060,6 @@ BOOL allianzIsExiting = FALSE;
 
 - (void)close
 {
-    [CDVUserAgentUtil releaseLock:&_userAgentLockToken];
     self.currentURL = nil;
 
     __weak UIViewController* weakSelf = self;
@@ -1092,16 +1079,7 @@ BOOL allianzIsExiting = FALSE;
 {
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
 
-    if (_userAgentLockToken != 0) {
-        [self.webView loadRequest:request];
-    } else {
-        __weak CDVAllianzWKInAppBrowserViewController* weakSelf = self;
-        [CDVUserAgentUtil acquireLock:^(NSInteger lockToken) {
-            _userAgentLockToken = lockToken;
-            [CDVUserAgentUtil setUserAgent:_userAgent lockToken:lockToken];
-            [weakSelf.webView loadRequest:request];
-        }];
-    }
+    [self.webView loadRequest:request];
 }
 
 - (void)goBack:(id)sender
@@ -1215,9 +1193,6 @@ BOOL allianzIsExiting = FALSE;
     BOOL isPDF = NO;
     //TODO webview class
     //BOOL isPDF = [@"true" isEqualToString :[theWebView evaluateJavaScript:@"document.body==null"]];
-    if (isPDF) {
-        [CDVUserAgentUtil setUserAgent:_prevUserAgent lockToken:_userAgentLockToken];
-    }
 
     [self.navigationDelegate didFinishNavigation:theWebView];
 }

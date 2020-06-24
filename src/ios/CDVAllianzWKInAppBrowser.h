@@ -53,9 +53,6 @@
 
 @interface CDVAllianzWKInAppBrowserViewController : VWVisioViewController <CDVScreenOrientationDelegate,WKNavigationDelegate,WKUIDelegate,WKScriptMessageHandler>{
     @private
-    NSString* _userAgent;
-    NSString* _prevUserAgent;
-    NSInteger _userAgentLockToken;
     CDVAllianzInAppBrowserOptions *_browserOptions;
 }
 
@@ -78,6 +75,6 @@
 - (void)showToolBar:(BOOL)show : (NSString *) toolbarPosition;
 - (void)setCloseButtonTitle:(NSString*)title : (NSString*) colorString : (int) buttonIndex;
 
-- (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent browserOptions: (CDVAllianzInAppBrowserOptions*) browserOptions;
+- (id)init:browserOptions: (CDVAllianzInAppBrowserOptions*) browserOptions;
 
 @end
