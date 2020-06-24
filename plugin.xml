@@ -83,10 +83,6 @@
                 <param name="ios-package" value="CDVAllianzInAppBrowser" />
                 <param name="onload" value="true" />
             </feature>
-            <feature name="UIAllianzInAppBrowser">
-                <param name="ios-package" value="CDVAllianzUIInAppBrowser" />
-                <param name="onload" value="true" />
-            </feature>
             <feature name="WKAllianzInAppBrowser">
                 <param name="ios-package" value="CDVAllianzWKInAppBrowser" />
                 <param name="onload" value="true" />
