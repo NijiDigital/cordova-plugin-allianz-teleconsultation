@@ -1274,14 +1274,4 @@ BOOL allianzIsExiting = FALSE;
     return 1 << UIInterfaceOrientationPortrait;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    if ((self.orientationDelegate != nil) && [self.orientationDelegate respondsToSelector:@selector(shouldAutorotateToInterfaceOrientation:)]) {
-        return [self.orientationDelegate shouldAutorotateToInterfaceOrientation:interfaceOrientation];
-    }
-
-    return YES;
-}
-
-
 @end //CDVAllianzWKInAppBrowserViewController
